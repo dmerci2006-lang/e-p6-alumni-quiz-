@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>P6 Alumni Intelligence Challenge</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:20px;font-family:Arial,sans-serif;background:#101827;color:white}
+.container{max-width:600px;margin:auto;background:#1e293b;padding:24px;border-radius:18px}
+h1{text-align:center;color:#60a5fa}.subtitle{text-align:center;color:#cbd5e1}
+input[type=text]{width:100%;padding:14px;border-radius:9px;border:0;margin:12px 0;font-size:16px}
+button{width:100%;padding:14px;border:0;border-radius:9px;background:#2563eb;color:white;font-size:17px;font-weight:bold;margin-top:12px}
+.timer{text-align:center;font-size:28px;color:#facc15;font-weight:bold;margin:20px}
+.question{background:#334155;padding:15px;border-radius:12px;margin:18px 0}
+label{display:block;padding:9px 0}.hidden{display:none}#result{text-align:center;font-size:20px}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>P6 ALUMNI CHALLENGE</h1><p class="subtitle">Intelligence Competition</p>
+<div id="welcome">
+<p>Welcome to the official five-minute challenge!</p>
+<p><b>Rules:</b></p>
+<ul><li>Five challenging questions.</li><li>Five minutes only.</li><li>Each correct answer earns 20 marks.</li><li>Submit before time expires.</li></ul>
+<input id="playerName" type="text" maxlength="60" placeholder="Enter your full name">
+<button onclick="startQuiz()">START CHALLENGE</button>
+</div>
+<div id="quiz" class="hidden">
+<div class="timer" id="timer">05:00</div><form id="quizForm">
+<div class="question"><b>1. A clock loses 5 minutes every hour. It is correct at 8:00 AM. What will it show when the real time is 2:00 PM?</b>
+<label><input type="radio" name="q1" value="0"> 1:30 PM</label><label><input type="radio" name="q1" value="1"> 1:45 PM</label><label><input type="radio" name="q1" value="2"> 1:50 PM</label><label><input type="radio" name="q1" value="3"> 1:55 PM</label></div>
+<div class="question"><b>2. Find the next number: 2, 6, 12, 20, 30, ...</b>
+<label><input type="radio" name="q2" value="0"> 36</label><label><input type="radio" name="q2" value="1"> 40</label><label><input type="radio" name="q2" value="2"> 42</label><label><input type="radio" name="q2" value="3"> 44</label></div>
+<div class="question"><b>3. A farmer has 17 sheep. All but 9 run away. How many remain?</b>
+<label><input type="radio" name="q3" value="0"> 8</label><label><input type="radio" name="q3" value="1"> 9</label><label><input type="radio" name="q3" value="2"> 17</label><label><input type="radio" name="q3" value="3"> 0</label></div>
+<div class="question"><b>4. Five machines make five items in five minutes. How long will 100 machines take to make 100 items?</b>
+<label><input type="radio" name="q4" value="0"> 5 minutes</label><label><input type="radio" name="q4" value="1"> 20 minutes</label><label><input type="radio" name="q4" value="2"> 100 minutes</label><label><input type="radio" name="q4" value="3"> 500 minutes</label></div>
+<div class="question"><b>5. A number is doubled and then increased by 10. The result is 30. What is the original number?</b>
+<label><input type="radio" name="q5" value="0"> 5</label><label><input type="radio" name="q5" value="1"> 10</label><label><input type="radio" name="q5" value="2"> 15</label><label><input type="radio" name="q5" value="3"> 20</label></div>
+<button type="button" onclick="submitQuiz()">SUBMIT ANSWERS</button>
+</form></div>
+<div id="result" class="hidden"><h2>Challenge Completed!</h2><p id="scoreText"></p><button onclick="location.reload()">FINISH</button></div>
+</div>
+<script>
+let seconds=300,countdown=null,finished=false;
+const answers=[0,2,1,0,1];
+function startQuiz(){
+ const name=document.getElementById("playerName").value.trim();
+ if(name.length<2){alert("Please enter your name.");return;}
+ document.getElementById("welcome").classList.add("hidden");
+ document.getElementById("quiz").classList.remove("hidden");
+ countdown=setInterval(function(){
+  seconds--;const min=Math.floor(seconds/60),sec=seconds%60;
+  document.getElementById("timer").textContent=String(min).padStart(2,"0")+":"+String(sec).padStart(2,"0");
+  if(seconds<=0)submitQuiz();
+ },1000);
+}
+function submitQuiz(){
+ if(finished)return;finished=true;if(countdown)clearInterval(countdown);
+ let score=0;
+ for(let i=1;i<=5;i++){
+  const selected=document.querySelector('input[name="q'+i+'"]:checked');
+  if(selected&&Number(selected.value)===answers[i-1])score+=20;
+ }
+ const name=document.getElementById("playerName").value.trim();
+ document.getElementById("quiz").classList.add("hidden");
+ document.getElementById("result").classList.remove("hidden");
+ document.getElementById("scoreText").innerHTML="Participant: <b>"+escapeHTML(name)+"</b><br><br>Your score: <b>"+score+" / 100</b><br><br>Thank you for participating!";
+}
+function escapeHTML(value){return value.replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+</script>
+</body></html>
